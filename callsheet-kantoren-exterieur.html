@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Draaiboek Kantoren - UniBarge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbfbfa;
+    --surface: #ffffff;
+    --surface-soft: #f9f9f8;
+    --ink: #202225;
+    --ink-soft: #555a61;
+    --muted: #7b7b76;
+    --line: #eaeaea;
+    --blue-bg: #e1f3fe;
+    --blue-ink: #1f6c9f;
+    --green-bg: #edf3ec;
+    --green-ink: #346538;
+    --yellow-bg: #fbf3db;
+    --yellow-ink: #956400;
+    --red-bg: #fdebec;
+    --red-ink: #9f2f2d;
+    --serif: 'Newsreader', Georgia, serif;
+    --sans: 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 18px 18px 48px;
+  }
+
+  .doc {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-soft);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #d8d8d4;
+  }
+
+  header {
+    padding: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  h1 {
+    margin-top: 10px;
+    font-family: var(--serif);
+    font-size: 40px;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-weight: 500;
+  }
+
+  .meta {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .meta span {
+    display: inline-block;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface-soft);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+
+  section {
+    padding: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  section:last-of-type {
+    border-bottom: 0;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 26px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+
+  .dayline {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
+    gap: 12px;
+    overflow-x: auto;
+  }
+
+  .dayline-stop {
+    min-width: 150px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    padding: 14px;
+  }
+
+  .dayline-stop .time {
+    font-family: var(--mono);
+    font-size: 18px;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .dayline-stop .place {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .dayline-stop .tag {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tag-blue { background: var(--blue-bg); color: var(--blue-ink); }
+  .tag-green { background: var(--green-bg); color: var(--green-ink); }
+  .tag-yellow { background: var(--yellow-bg); color: var(--yellow-ink); }
+  .tag-red { background: var(--red-bg); color: var(--red-ink); }
+
+  .stops {
+    margin-top: 12px;
+  }
+
+  .stop {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stop:last-child {
+    border-bottom: 0;
+  }
+
+  .timeblock {
+    font-family: var(--mono);
+  }
+
+  .timeblock .time {
+    font-size: 32px;
+    line-height: 0.95;
+    color: var(--ink);
+  }
+
+  .timeblock .year {
+    margin-top: 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  .content h3 {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+
+  .address {
+    margin-top: 6px;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  .info {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .block h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .block ul {
+    list-style: none;
+  }
+
+  .block li {
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 7px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  .block li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--muted);
+  }
+
+  .map-link {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--surface-soft);
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .gear-list {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .gear-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--surface-soft);
+  }
+
+  .gear-card h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .gear-card ul {
+    list-style: none;
+  }
+
+  .gear-card li {
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 7px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  .gear-card li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--muted);
+  }
+
+  footer {
+    padding: 16px 24px 20px;
+    border-top: 1px solid var(--line);
+    background: var(--surface-soft);
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 860px) {
+    .stop {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .info,
+    .gear-list {
+      grid-template-columns: 1fr;
+    }
+
+    .timeblock .time {
+      font-size: 28px;
+    }
+
+    .content h3 {
+      font-size: 24px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="doc">
+    <div class="topbar">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+
+    <header>
+      <div class="eyebrow">UniBarge · Kantoren exterieur</div>
+      <h1>Draaiboek kantoorlocaties</h1>
+      <div class="meta">
+        <span>Start 10:20 bij Boompjes</span>
+        <span>Eerste stop: Boompjes</span>
+        <span>Eric + Ben</span>
+        <span>Samen filmen + dronen</span>
+        <span>Geen geluidsdag</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Dagverloop</h2>
+      <div class="dayline">
+        <div class="dayline-stop">
+          <div class="time">10:20</div>
+          <div class="place">Boompjes</div>
+          <span class="tag tag-yellow">Vertrek</span>
+        </div>
+        <div class="dayline-stop">
+          <div class="time">11:20</div>
+          <div class="place">Maaskade</div>
+          <span class="tag tag-blue">Rotterdam</span>
+        </div>
+        <div class="dayline-stop">
+          <div class="time">14:00</div>
+          <div class="place">Maasboulevard</div>
+          <span class="tag tag-yellow">Rotterdam</span>
+        </div>
+        <div class="dayline-stop">
+          <div class="time">14:50</div>
+          <div class="place">Pier 14</div>
+          <span class="tag tag-blue">Zwijndrecht</span>
+        </div>
+        <div class="dayline-stop">
+          <div class="time">15:40</div>
+          <div class="place">Vrouwgelenweg</div>
+          <span class="tag tag-red">Toekomstplek</span>
+        </div>
+        <div class="dayline-stop">
+          <div class="time">16:25-17:10</div>
+          <div class="place">Noordkade</div>
+          <span class="tag tag-green">H-I-Ambacht</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Draaiboek</h2>
+      <div class="stops">
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">10:20</div>
+            <div class="year">Start</div>
+          </div>
+          <div class="content">
+            <h3>Start bij Boompjes</h3>
+            <div class="address">Gear uitladen, korte check, direct draaien</div>
+            <div class="info">
+              <div class="block">
+                <h4>Doen</h4>
+                <ul>
+                  <li>Korte gear check op locatie</li>
+                  <li>Drone, camera, accu's en kaarten nalopen</li>
+                  <li>Direct door naar eerste shots</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Klaar als</h4>
+                <ul>
+                  <li>Eerste shots op Boompjes binnen zijn</li>
+                  <li>Geen tijdverlies aan opstart ontstaat</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">10:20-11:10</div>
+            <div class="year">2016</div>
+          </div>
+          <div class="content">
+            <h3>Boompjes 250/254</h3>
+            <div class="address">Boompjes 250/254, Rotterdam</div>
+            <div class="info">
+              <div class="block">
+                <h4>Draaien</h4>
+                <ul>
+                  <li>Hero-shot van gevel met kade en water</li>
+                  <li>Raamstrook boven entree “De Nieuwe Boompjes” expliciet meenemen</li>
+                  <li>Ingang en plint als rustige tussenbeelden</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Let op</h4>
+                <ul>
+                  <li>Adres bevestigd door Dianne</li>
+                  <li>Niet te veel skyline, pand moet leesbaar zijn</li>
+                  <li>Openbaar terrein, niet aanbellen</li>
+                </ul>
+              </div>
+            </div>
+            <a class="map-link" href="https://www.google.com/maps/search/Boompjes+250+254+Rotterdam" target="_blank" rel="noopener">Open in Maps</a>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">11:20-12:10</div>
+            <div class="year">2006</div>
+          </div>
+          <div class="content">
+            <h3>Maaskade · Hulstkampgebouw-zone</h3>
+            <div class="address">Maaskade, Rotterdam</div>
+            <div class="info">
+              <div class="block">
+                <h4>Draaien</h4>
+                <ul>
+                  <li>Hulstkampgebouw met kade en brug</li>
+                  <li>Brede establishing met Rotterdam-context</li>
+                  <li>Eén stille hero-compositie als oprichtingsbeeld</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Let op</h4>
+                <ul>
+                  <li>Niet zoeken naar huisnummer</li>
+                  <li>Dianne gaf gebiedsrouting, geen exact pand</li>
+                  <li>Eventueel later terug voor beter licht</li>
+                </ul>
+              </div>
+            </div>
+            <a class="map-link" href="https://www.google.com/maps/search/Hulstkampgebouw+Rotterdam" target="_blank" rel="noopener">Open in Maps</a>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">12:15-14:00</div>
+            <div class="year">Transit</div>
+          </div>
+          <div class="content">
+            <h3>Verplaatsing en korte lunch</h3>
+            <div class="address">Door naar Zwijndrecht / H-I-Ambacht</div>
+            <div class="info">
+              <div class="block">
+                <h4>Doen</h4>
+                <ul>
+                  <li>Snel media en accu's checken</li>
+                  <li>Nieuwe route klaarzetten</li>
+                  <li>Niet uitlopen</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Doel</h4>
+                <ul>
+                  <li>Om 14:00 draaien op Maasboulevard</li>
+                  <li>Middagblok zonder haastverlies starten</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">14:00-14:35</div>
+            <div class="year">2011</div>
+          </div>
+          <div class="content">
+            <h3>Maasboulevard 268</h3>
+            <div class="address">Maasboulevard 268, Zwijndrecht</div>
+            <div class="info">
+              <div class="block">
+                <h4>Draaien</h4>
+                <ul>
+                  <li>Gevelshot</li>
+                  <li>Boulevard-context</li>
+                  <li>Korte detailpasses van kozijnen en ritme</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Let op</h4>
+                <ul>
+                  <li>Adres bevestigd door Dianne</li>
+                  <li>Korte stop houden zodra hero-shot binnen is</li>
+                  <li>Openbaar terrein</li>
+                </ul>
+              </div>
+            </div>
+            <a class="map-link" href="https://www.google.com/maps/search/Maasboulevard+268+Zwijndrecht" target="_blank" rel="noopener">Open in Maps</a>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">14:50-15:25</div>
+            <div class="year">2027</div>
+          </div>
+          <div class="content">
+            <h3>Pier 14</h3>
+            <div class="address">Pier 14, Zwijndrecht</div>
+            <div class="info">
+              <div class="block">
+                <h4>Draaien</h4>
+                <ul>
+                  <li>Brede context van terrein</li>
+                  <li>Kade en leegte</li>
+                  <li>Plates voor latere graphic als nodig</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Let op</h4>
+                <ul>
+                  <li>Er staat nog niets gebouwd</li>
+                  <li>Niet behandelen als bestaand kantoor</li>
+                  <li>Werkt vooral als toekomstbeeld</li>
+                </ul>
+              </div>
+            </div>
+            <a class="map-link" href="https://www.google.com/maps/search/Pier+14+Zwijndrecht" target="_blank" rel="noopener">Open in Maps</a>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">15:40-16:10</div>
+            <div class="year">2021</div>
+          </div>
+          <div class="content">
+            <h3>Vrouwgelenweg 84</h3>
+            <div class="address">Vrouwgelenweg 84, Hendrik-Ido-Ambacht</div>
+            <div class="info">
+              <div class="block">
+                <h4>Draaien</h4>
+                <ul>
+                  <li>Alleen registrerend beeld van huidige situatie</li>
+                  <li>Brede contextshot is genoeg</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Let op</h4>
+                <ul>
+                  <li>Pand bestaat niet meer</li>
+                  <li>Daar staan nu huizen</li>
+                  <li>Snelle stop houden</li>
+                </ul>
+              </div>
+            </div>
+            <a class="map-link" href="https://www.google.com/maps/search/Vrouwgelenweg+84+Hendrik-Ido-Ambacht" target="_blank" rel="noopener">Open in Maps</a>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">16:25-17:10</div>
+            <div class="year">2023</div>
+          </div>
+          <div class="content">
+            <h3>Noordkade 20</h3>
+            <div class="address">Noordkade 20, 3341 SZ Hendrik-Ido-Ambacht</div>
+            <div class="info">
+              <div class="block">
+                <h4>Draaien</h4>
+                <ul>
+                  <li>Huidige kantoor-entree</li>
+                  <li>Gevel, vlaggenmast en nette context</li>
+                  <li>Eventueel nog een tweede pass later op de dag</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Let op</h4>
+                <ul>
+                  <li>Adres bevestigd door Dianne</li>
+                  <li>Sterkste eindanker van de dag</li>
+                  <li>Werkt ook als bufferlocatie</li>
+                </ul>
+              </div>
+            </div>
+            <a class="map-link" href="https://www.google.com/maps/search/Noordkade+20+3341+SZ+Hendrik-Ido-Ambacht" target="_blank" rel="noopener">Open in Maps</a>
+          </div>
+        </article>
+
+        <article class="stop">
+          <div class="timeblock">
+            <div class="time">17:10-18:30</div>
+            <div class="year">Buffer</div>
+          </div>
+          <div class="content">
+            <h3>Buffer / tweede pass</h3>
+            <div class="address">Noordkade of Maaskade, afhankelijk van licht en wat nog mist</div>
+            <div class="info">
+              <div class="block">
+                <h4>Terug naartoe</h4>
+                <ul>
+                  <li>Noordkade als huidig kantoor nog sterker moet</li>
+                  <li>Maaskade als oprichtingsbeeld beter licht nodig heeft</li>
+                </ul>
+              </div>
+              <div class="block">
+                <h4>Niet doen</h4>
+                <ul>
+                  <li>Niet blijven hangen op zwakke locaties</li>
+                  <li>Geen extra stop toevoegen buiten deze route</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Wat mee moet</h2>
+      <div class="gear-list">
+        <div class="gear-card">
+          <h3>Camera</h3>
+          <ul>
+            <li>Camera body</li>
+            <li>24-70</li>
+            <li>Groothoek</li>
+            <li>Gimbal</li>
+          </ul>
+        </div>
+        <div class="gear-card">
+          <h3>Drone</h3>
+          <ul>
+            <li>Drone</li>
+            <li>ND-set</li>
+            <li>Minimaal 2 reserve-accu's</li>
+            <li>DroneVluchtplanner / luchtruimcheck</li>
+          </ul>
+        </div>
+        <div class="gear-card">
+          <h3>Praktisch</h3>
+          <ul>
+            <li>SSD / kaarten</li>
+            <li>Hardcase</li>
+            <li>Offline route / Maps</li>
+            <li>Korte lunch en water</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Draaiboek kantoorlocaties</span>
+      <span>v5 · 6 mei 2026</span>
+      <span>UniBarge · VAN HIER</span>
+    </footer>
+  </div>
+</div>
+</body>
+</html>
