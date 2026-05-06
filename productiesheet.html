@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UniBarge - Productiesheet Clone</title>
+  <style>
+    :root {
+      --ink: #162033;
+      --muted: #657289;
+      --line: #d9e0ea;
+      --paper: #f6f8fb;
+      --white: #ffffff;
+      --navy: #0b254f;
+      --blue: #1f5b89;
+      --gold: #b99642;
+      --green: #22745a;
+      --orange: #a85f19;
+      --red: #a33a3a;
+      --shadow: 0 12px 30px rgba(12, 28, 55, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 34px clamp(18px, 4vw, 56px) 26px;
+      border-bottom: 5px solid var(--gold);
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      max-width: 760px;
+      color: #dbe5f4;
+      font-size: 16px;
+    }
+
+    .stamp {
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #dbe5f4;
+      font-size: 13px;
+      min-width: 220px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px clamp(18px, 4vw, 56px);
+      background: rgba(246, 248, 251, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav a {
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      white-space: nowrap;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    nav a:hover { background: #e8eef7; }
+
+    main {
+      padding: 28px clamp(18px, 4vw, 56px) 64px;
+      max-width: 1540px;
+      margin: 0 auto;
+    }
+
+    section {
+      margin: 0 0 30px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .note {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--navy);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--gold); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      padding: 18px 22px 22px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+      background: #fbfcfe;
+    }
+
+    .metric b {
+      display: block;
+      color: var(--navy);
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #eef3f9;
+      color: var(--navy);
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    td {
+      padding: 11px 12px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    td[contenteditable="true"] {
+      outline: 0;
+      background-image: linear-gradient(transparent calc(100% - 1px), rgba(185,150,66,0.22) 1px);
+    }
+
+    td[contenteditable="true"]:focus {
+      background: #fff8df;
+      box-shadow: inset 0 0 0 2px rgba(185,150,66,0.45);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .open { background: #fff0df; color: var(--orange); }
+    .wait { background: #e9f0fb; color: var(--blue); }
+    .ok { background: #e6f4ee; color: var(--green); }
+    .risk { background: #fdeaea; color: var(--red); }
+    .via { background: #edf1f7; color: var(--navy); }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px 22px 22px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+      background: #fbfcfe;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 920px) {
+      .grid, .cards { grid-template-columns: 1fr; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .stamp { width: 100%; }
+    }
+
+    @media print {
+      nav, .tools { display: none; }
+      body { background: white; }
+      main { padding: 0; max-width: none; }
+      section { box-shadow: none; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topline">
+      <div>
+        <h1>UniBarge Productiesheet</h1>
+        <p class="subtitle">Publieke clone op basis van de lokale productieplanning. Bedoeld als snelle, deelbare werkversie naast de Google Sheet.</p>
+      </div>
+      <div class="stamp">
+        <b>Status:</b> werkversie<br>
+        <b>Bijgewerkt:</b> 6 mei 2026<br>
+        <b>Bron:</b> pitch v12 + productie master
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#overzicht">Overzicht</a>
+    <a href="#urgent">Urgenties</a>
+    <a href="#draaidagen">Draaidagen</a>
+    <a href="#kantoren">Kantoren</a>
+    <a href="#unibarge">Via UniBarge</a>
+    <a href="#eric">Eric checklist</a>
+    <a href="#checks">Open checks</a>
+  </nav>
+
+  <main>
+    <section id="overzicht">
+      <div class="section-head">
+        <div>
+          <h2>Overzicht</h2>
+          <p class="note">Kerngetallen voor productie, planning en afhankelijkheden.</p>
+        </div>
+        <div class="tools">
+          <button type="button" onclick="window.print()">Print</button>
+          <button type="button" onclick="downloadCsv()">Download CSV</button>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="metric"><b>8</b><span>basisscenario draaidagen</span></div>
+        <div class="metric"><b>10</b><span>inclusief VO en optionele buffer</span></div>
+        <div class="metric"><b>6</b><span>kantoorlocaties / exterieurs</span></div>
+        <div class="metric"><b>25</b><span>eigen schepen in pitch v12</span></div>
+      </div>
+    </section>
+
+    <section id="urgent">
+      <div class="section-head">
+        <div>
+          <h2>Top urgenties deze week</h2>
+          <p class="note">Deze cellen zijn lokaal bewerkbaar in de browser; wijzigingen blijven alleen in deze browser bewaard.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table data-export="Top urgenties">
+          <thead>
+            <tr><th>#</th><th>Actie</th><th>Owner</th><th>Deadline</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td contenteditable="true">School locatie scouten: Erasmiaans Gymnasium, weekend mei/juni</td><td contenteditable="true">Ben</td><td contenteditable="true">eind deze week</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>2</td><td contenteditable="true">Casting starten: tiener Bob, moeder, juf</td><td contenteditable="true">Ben</td><td contenteditable="true">eind deze week</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>3</td><td contenteditable="true">Simulator datum vastleggen: 11 of 19 juni</td><td contenteditable="true">Ben via Anne Poker / STC</td><td contenteditable="true">binnen drie dagen</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>4</td><td contenteditable="true">Vlootlijst opvragen en scheepsnaam Bobs eerste dag achterhalen</td><td contenteditable="true">Ben / Dianne</td><td contenteditable="true">deze week</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>5</td><td contenteditable="true">Niels van Burgen bellen: overstap of uitbreiding CPP</td><td contenteditable="true">Ben</td><td contenteditable="true">deze week</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>6</td><td contenteditable="true">Dianne call plannen: akkoord, betaling, inventarisatie</td><td contenteditable="true">Ben</td><td contenteditable="true">vandaag of morgen</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>7</td><td contenteditable="true">Eric finale gear-list per draaidag</td><td contenteditable="true">Eric</td><td contenteditable="true">eind deze week</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>8</td><td contenteditable="true">Onderwater-rig optie D3: eigen of extern huren</td><td contenteditable="true">Eric</td><td contenteditable="true">volgende week</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>9</td><td contenteditable="true">Backup-crew check: Dai-We en Merry beschikbaarheid juni</td><td contenteditable="true">Eric</td><td contenteditable="true">volgende week</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="draaidagen">
+      <div class="section-head">
+        <div>
+          <h2>Draaidagen</h2>
+          <p class="note">Basisscenario uit de productie master, samengebracht in sheetvorm.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table data-export="Draaidagen">
+          <thead>
+            <tr><th>Dag</th><th>Cluster</th><th>Locatie</th><th>Cast</th><th>Gear-kern</th><th>Via UniBarge</th><th>Owner</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>D1</td><td contenteditable="true">Woonkamer 1987</td><td contenteditable="true">Rijtjeshuis Rotterdam</td><td contenteditable="true">Jong Bob, moeder</td><td contenteditable="true">Camera A, daglicht support, lavalier</td><td><span class="pill ok">nee</span></td><td contenteditable="true">Ben</td><td contenteditable="true">locatie scouten</td></tr>
+            <tr><td>D2</td><td contenteditable="true">Klaslokaal en schoolplein</td><td contenteditable="true">Erasmiaans Gymnasium</td><td contenteditable="true">Jong Bob, juf, kinderen</td><td contenteditable="true">Camera A+B, geluidset</td><td><span class="pill ok">nee</span></td><td contenteditable="true">Ben</td><td contenteditable="true">locatie polsen</td></tr>
+            <tr><td>D3</td><td contenteditable="true">Underwater en drone reveal</td><td contenteditable="true">Zwembad of watertank + groot UniBarge-schip</td><td contenteditable="true">Jong of tiener Bob</td><td contenteditable="true">Onderwater-rig, drone, hero-lens</td><td><span class="pill via">ja</span></td><td contenteditable="true">Ben / Eric / UniBarge</td><td contenteditable="true">open</td></tr>
+            <tr><td>D4</td><td contenteditable="true">Oud schip: eerste dag</td><td contenteditable="true">DPP of container era schip</td><td contenteditable="true">Tiener Bob, oudere kapitein, crew</td><td contenteditable="true">Camera A+B, gimbal, lavaliers, dek-licht</td><td><span class="pill via">ja</span></td><td contenteditable="true">UniBarge</td><td contenteditable="true">wacht Dianne</td></tr>
+            <tr><td>D5</td><td contenteditable="true">Oud schip: boordleven</td><td contenteditable="true">Zelfde schip als D4</td><td contenteditable="true">Tiener Bob, crew</td><td contenteditable="true">Binnen-licht, kombuis, hut, brug</td><td><span class="pill via">ja</span></td><td contenteditable="true">UniBarge</td><td contenteditable="true">wacht Dianne</td></tr>
+            <tr><td>D6</td><td contenteditable="true">CPP tanker</td><td contenteditable="true">Modern CPP-schip, terminal, sluis</td><td contenteditable="true">Volwassen Bob, oudere kapitein</td><td contenteditable="true">Camera A+B, drone, ADN props</td><td><span class="pill via">ja</span></td><td contenteditable="true">UniBarge</td><td contenteditable="true">wacht Dianne</td></tr>
+            <tr><td>D7</td><td contenteditable="true">Simulator STC en kantoor avond</td><td contenteditable="true">STC Rotterdam + Noordkade kantoor</td><td contenteditable="true">Volwassen Bob, kapiteins, Daniel, Alexander</td><td contenteditable="true">Camera A, simulator low-light, kantoorlicht</td><td><span class="pill via">ja</span></td><td contenteditable="true">Ben / UniBarge</td><td contenteditable="true">datum vastleggen</td></tr>
+            <tr><td>D8</td><td contenteditable="true">Rotterdam exterieurs, Chicago, UniGas, slot</td><td contenteditable="true">Chicago, UniGas I/II/III, Pier 14, Boompjes, Noordkade</td><td contenteditable="true">Volwassen Bob, jonge starter</td><td contenteditable="true">Drone uitgebreid, gimbal, hero-lens</td><td><span class="pill via">ja</span></td><td contenteditable="true">UniBarge</td><td contenteditable="true">wacht Dianne</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="kantoren">
+      <div class="section-head">
+        <div>
+          <h2>Kantoorpanden te filmen</h2>
+          <p class="note">Uit pitch v12: vooral Blok 5, met aanvullingen in Blok 7, 8 en 9.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="card"><h3>Maaskade, Rotterdam</h3><p>Blok 5B. Eerste kantoor, oprichtingsmoment 2006. Exterieur nodig; reconstructie als het pand niet meer werkt.</p></article>
+        <article class="card"><h3>Maasboulevard, Zwijndrecht</h3><p>Blok 5 montage. Kantoorverhuizing 2011. Exterieur als tijdlijnbeeld.</p></article>
+        <article class="card"><h3>Boompjes 254, Rotterdam</h3><p>Blok 5 en Blok 8. Groei 2016, CIMS sluit aan. Exterieur plus eventueel kantoor-sfeer.</p></article>
+        <article class="card"><h3>Vrouwgeleweg, H-I-Ambacht</h3><p>Blok 5 montage. Verhuizing rond 2021. Exacte spelling en datum nog checken.</p></article>
+        <article class="card"><h3>Noordkade, H-I-Ambacht</h3><p>Blok 7 kantooravond en Blok 8 exterieur. Huidig kantoor, directiescene met Daniel en Alexander.</p></article>
+        <article class="card"><h3>Pier 14, Zwijndrecht</h3><p>Blok 8 en 9. Toekomstig kantoor, luchtige noot en vooruitblik richting 2027.</p></article>
+      </div>
+    </section>
+
+    <section id="unibarge">
+      <div class="section-head">
+        <div>
+          <h2>Dependencies via UniBarge</h2>
+          <p class="note">Wat Dianne / UniBarge moet leveren, bevestigen of inhoudelijk checken.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table data-export="Via UniBarge">
+          <thead>
+            <tr><th>Categorie</th><th>Nodig</th><th>Blokken / dagen</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Schepen</td><td contenteditable="true">Oud schip DPP/container era, modern CPP-tanker, groot hero-schip, Chicago, UniGas I/II/III</td><td contenteditable="true">D3-D8</td><td contenteditable="true"><span class="pill wait">wacht Dianne</span></td></tr>
+            <tr><td>Mensen</td><td contenteditable="true">Echte crew, twee ervaren kapiteins, Daniel en Alexander, jonge starter of kind slot</td><td contenteditable="true">D4-D8, D10</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>Locaties</td><td contenteditable="true">Noordkade kantoor, Pier 14, werf indien Anastacia of Servia zichtbaar zijn</td><td contenteditable="true">D7-D8</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>Archief</td><td contenteditable="true">Binnenvaartkrant, Jowi-foto's, oude foto's ouders, bedrijfsdocumenten 2006-2010, SAIL 2025, Kapiteinsdag</td><td contenteditable="true">Blok 5, 8, 9</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+            <tr><td>Fact-check</td><td contenteditable="true">Tros beginnersfout, zwemvest, laden/lossen, marifoon Botlek, terugmelding manoeuvre, DPP versus CPP</td><td contenteditable="true">Blok 4, 6, 7, 8</td><td contenteditable="true"><span class="pill open">open</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="eric">
+      <div class="section-head">
+        <div>
+          <h2>Eric checklist</h2>
+          <p class="note">Gear en crew per draaidag, overgenomen uit de productie master.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table data-export="Eric checklist">
+          <thead>
+            <tr><th>Onderdeel</th><th>D1</th><th>D2</th><th>D3</th><th>D4-D5</th><th>D6</th><th>D7</th><th>D8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Camera A</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+            <tr><td>Camera B</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+            <tr><td>Drone</td><td>nee</td><td>nee</td><td>ja</td><td>nee</td><td>ja</td><td>nee</td><td>ja</td></tr>
+            <tr><td>Onderwater-rig</td><td>nee</td><td>nee</td><td contenteditable="true">ja, extern?</td><td>nee</td><td>nee</td><td>nee</td><td>nee</td></tr>
+            <tr><td>Gimbal</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+            <tr><td>Geluid lavalier</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+            <tr><td>Backup operator</td><td>nee</td><td>misschien</td><td>ja</td><td>misschien</td><td>ja</td><td>nee</td><td>misschien</td></tr>
+            <tr><td>Storage SSD</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="checks">
+      <div class="section-head">
+        <div>
+          <h2>Open checks</h2>
+          <p class="note">Script- en productiekeuzes die nog niet definitief zijn.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="card"><h3>Blok 5 tijdsprong VO</h3><p>Nog herschrijven na bevestiging van Niels van Burgen over CPP: overstap of uitbreiding.</p></article>
+        <article class="card"><h3>Bob eerste schip</h3><p>Vlootlijst en scheepsnaam opvragen bij UniBarge. Nu nog placeholder.</p></article>
+        <article class="card"><h3>Slot Blok 9</h3><p>Kind op brug of jonge starter. Afstemmen met Dianne.</p></article>
+        <article class="card"><h3>Simulator datum</h3><p>11 of 19 juni. Bevestigen via Anne Poker / STC.</p></article>
+        <article class="card"><h3>Archiefselectie</h3><p>Binnenvaartkrant, Jowi-foto's, oude bedrijfsbeelden en kapiteinsdag materiaal.</p></article>
+        <article class="card"><h3>Kantoorlocaties</h3><p>Exacte adressen, filmtoestemming en visuele bruikbaarheid per pand checken.</p></article>
+      </div>
+    </section>
+
+    <p class="footer">Publieke clone. Bronbestanden lokaal: PREP_PRODUCTIE_MASTER.md, VAN_HIER_Productieplanning_Intern.md, pitch v12.</p>
+  </main>
+
+  <script>
+    const key = "unibarge-productiesheet-clone-v1";
+
+    function saveEditableState() {
+      const cells = [...document.querySelectorAll('[contenteditable="true"]')].map((cell) => cell.innerHTML);
+      localStorage.setItem(key, JSON.stringify(cells));
+    }
+
+    function restoreEditableState() {
+      const saved = localStorage.getItem(key);
+      if (!saved) return;
+      const values = JSON.parse(saved);
+      document.querySelectorAll('[contenteditable="true"]').forEach((cell, index) => {
+        if (values[index] !== undefined) cell.innerHTML = values[index];
+      });
+    }
+
+    function cellText(cell) {
+      return '"' + cell.innerText.replaceAll('"', '""').trim() + '"';
+    }
+
+    function downloadCsv() {
+      const rows = [];
+      document.querySelectorAll('table[data-export]').forEach((table) => {
+        rows.push('"' + table.dataset.export.replaceAll('"', '""') + '"');
+        table.querySelectorAll('tr').forEach((tr) => {
+          rows.push([...tr.children].map(cellText).join(','));
+        });
+        rows.push('');
+      });
+      const blob = new Blob([rows.join('\n')], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "unibarge-productiesheet-clone.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    restoreEditableState();
+    document.addEventListener("input", (event) => {
+      if (event.target.matches('[contenteditable="true"]')) saveEditableState();
+    });
+  </script>
+</body>
+</html>
